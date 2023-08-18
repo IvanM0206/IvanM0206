@@ -1,0 +1,193 @@
+---
+title: "TP_2"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+date: "2023-08-18"
+---
+
+## Ejercicio 1
+
+#### Tomando $\mathcal{X}$. v.a. y $\mathcal{X}$~$\mathcal{E}$($\lambda$) y $\lambda$ = 1/12
+
+Teoricamente E($\mathcal{X}$) = 12 y V($\mathcal{X}$) = 144
+
+En la simulacion de 10.000 valores de $\mathcal{X}$, se puede ver como la esperanza y varianza se acercan a esos valores teoricos
+
+```{r}
+exp_N_infty = rexp(10000, rate = 1/12)
+mean(exp_N_infty)
+var(exp_N_infty)
+```
+
+```{r, echo = F}
+hist(exp_N_infty, plot = T, probability = T, col = "red")
+curve(1/12*exp(-(1/12)*x), add = T, col = "blue")
+```
+
+##### Se puede ver en el grafico como las 10.000 simulaciones de una exponencial tiene una distribucion que se asemeja mucho a una exponencial de $\lambda$ = 1/12 (la curva azul)
+
+
+## Ejercicio 2
+
+#### Realizacion de 10.000 promedios de X1,...,Xn con n = 5, n = 30 y n = 100
+
+```{r}
+calculo_de_promedios <- function(n){
+  promedios_n = c()
+  for(i in 1:10000){
+    promedios_n <- append(promedios_n, mean(rexp(n, rate = 1/12)))
+  } 
+  return(promedios_n)
+}
+```
+Esta funcion calcula 10.000 realizaciones del promedio de X1,...,Xn i.i.d. con $\mathcal{X}$~$\mathcal{E}$($\lambda$) y $\lambda$ = 1/12
+
+```{r, echo=T}
+
+promedios_exp5 = calculo_de_promedios(5)
+
+hist(promedios_exp5, plot = T, probability = T, xlim = c(0, 32), xaxt = "n", main = "Promedio con n = 5")
+axis(1, at = seq(0, 32, 4))
+curve(dnorm(x, mean = 12, sd= sqrt(144/5)), add = T, col = "red", lwd = 2)
+```
+
+La normal no es una buena aproximacion al promedio, esto lo podemos saber viendo el grafico. La distribucion del promedio no esta centrada en la media de la normal y a su vez tiene asimetria a derecha.
+
+```{r}
+promedios_exp30 = calculo_de_promedios(30)
+hist(promedios_exp30, plot = T, probability = T, xlim = c(0,32), xaxt = "n")
+axis(1, at = seq(0, 32, 4))
+curve(dnorm(x, mean = 12, sd= sqrt(144/30)), add = T, col = "blue", lwd = 2)
+```
+
+```{r}
+promedios_exp100 = calculo_de_promedios(100)
+hist(promedios_exp100, plot = T, probability = T, xlim = c(0,32), xaxt = "n")
+axis(1, at = seq(0, 32, 4))
+curve(dnorm(x, mean = 12, sd= sqrt(144/100)), add = T, col = "green", lwd = 2)
+
+```
+En este caso el promedio se aproxima muy bien a la normal, ya que esta centrada en la media (12) y tiene simetria
+
+e) I. A medida que n aumenta, el promedio cada vez se parecen mas a una normal, esto se debe al TCL
+
+II. A medida que n aumenta, el promedio se va concentrando alrededor de la esperanza, esto se debe a LGN, el cual garantiza este resultado
+
+## Ejercicio 3
+
+#### Tomando $\mathcal{X}$. v.a. y $\mathcal{X}$~$\mathcal{U}$(10, 14)
+
+Teoricamente E($\mathcal{X}$) = 12 y V($\mathcal{X}$) = 4/3
+
+En la simulacion de 10.000 valores de $\mathcal{X}$, se puede ver como la esperanza y varianza se acercan a esos valores teoricos
+
+```{r}
+unif_N_infty = runif(10000, min = 10, max = 14)
+mean(unif_N_infty)
+var(unif_N_infty)
+```
+
+```{r}
+hist(unif_N_infty, plot = T, probability = T)
+curve(dunif(x, min = 10, max = 14), add = T, col = "blue")
+```
+
+##### Se puede ver como el grafico de la simulacion de 10.000 muestras se asemeja a $\mathcal{U}$(10, 14) (la curva azul)
+
+## Ejercicio 4
+
+#### Realizando 10.000 realizaciones del promedio de X1,...,Xn con n = 5, n = 30 y n = 100
+
+```{r}
+calculo_de_promedios_unif <- function(n){
+  promedios_n = c()
+  for(i in 1:10000){
+    promedios_n <- append(promedios_n, mean(runif(n, min = 10, max = 14)))
+  } 
+  return(promedios_n)
+}
+```
+
+funcion para calcular 10.000 simulaciones del promedio de n v.a. X1,...,Xn i.i.d. con $\mathcal{X}$~$\mathcal{U}$(10, 14)
+
+```{r}
+promedios_unif5 = calculo_de_promedios_unif(5)
+
+hist(promedios_unif5, plot = T, probability = T, xlim = c(10, 14))
+
+curve(dnorm(x, mean = 12, sd= sqrt(4/15)), add = T, col = "red", lwd = 2)
+```
+En este grafico se puede ver como la aproximacion normal del promedio es bastante buena, esto se debe a que la uniforme ya cumple con una caracteristica de la normal y es la simetria
+
+
+```{r}
+promedios_unif30 = calculo_de_promedios_unif(30)
+hist(promedios_unif30, plot = T, probability = T, xlim = c(10, 14))
+curve(dnorm(x, mean = 12, sd= sqrt(4/90)), add = T, col = "blue", lwd = 2)
+```
+
+```{r}
+promedios_unif100 = calculo_de_promedios_unif(100)
+hist(promedios_unif100, plot = T, probability = T, xlim = c(10,14))
+curve(dnorm(x, mean = 12, sd= sqrt(4/300)), add = T, col = "green", lwd = 2)
+```
+
+## Ejercicio 5
+
+#### Tomando $\mathcal{X}$. v.a. y $\mathcal{X}$~$\mathcal{N}$(12, 4/3)
+
+Teoricamente E($\mathcal{X}$) = 12 y V($\mathcal{X}$) = 4/3
+
+En la simulacion de 10.000 valores de $\mathcal{X}$, se puede ver como la esperanza y varianza se acercan a esos valores teoricos
+
+```{r}
+norm_N_infty = rnorm(10000, mean = 12, sd = sqrt(4/3))
+mean(norm_N_infty)
+var(norm_N_infty)
+```
+
+```{r}
+hist(norm_N_infty, plot = T, probability = T)
+curve(dnorm(x, mean = 12, sd = sqrt(4/3)), add = T, col = "blue")
+```
+
+##### Se puede ver como el grafico de la simulacion de 10.000 muestras se asemeja a una $\mathcal{N}$(12, 4/3) (la curva azul)
+
+## Ejercicio 6
+
+#### Realizando 10.000 realizaciones del promedio de X1,...,Xn con n = 5, n = 30 y n = 100
+
+```{r}
+calculo_de_promedios_norm <- function(n){
+  promedios_n = c()
+  for(i in 1:10000){
+    promedios_n <- append(promedios_n, mean(rnorm(n, mean = 12, sd = sqrt(4/3))))
+  } 
+  return(promedios_n)
+}
+```
+
+funcion para calcular 10.000 simulaciones del promedio de n v.a. X1,...,Xn i.i.d. con $\mathcal{X}$~$\mathcal{N}$(12, 4/3)
+
+```{r}
+promedios_norm5 = calculo_de_promedios_norm(5)
+
+hist(promedios_norm5, plot = T, probability = T, xlim = c(10,14))
+
+curve(dnorm(x, mean = 12, sd= sqrt(4/15)), add = T, col = "red", lwd = 2)
+```
+En el grafico ya se puede ver como aproximacion normal del promedio es muy buena con un n muy pequeño y esto se debe a que las simulaciones corresponden a una normal, esto es asi porque por propiedades de la normal, la media de un conjunto de normales debe ser normal.
+
+```{r}
+promedios_norm30 = calculo_de_promedios_norm(30)
+hist(promedios_norm30, plot = T, probability = T, xlim = c(10, 14))
+curve(dnorm(x, mean = 12, sd= sqrt(4/90)), add = T, col = "blue", lwd = 2)
+```
+
+```{r}
+promedios_norm100 = calculo_de_promedios_norm(100)
+hist(promedios_norm100, plot = T, probability = T, xlim = c(11, 13))
+curve(dnorm(x, mean = 12, sd= sqrt(4/300)), add = T, col = "green", lwd = 2)
+```

@@ -1,0 +1,167 @@
+---
+title: "Trabajo_practico_3"
+output:
+  html_document:
+    df_print: paged
+date: "2023-08-19"
+---
+
+### Ejercicio 1
+
+#### Estimador 1. $\widehat{\theta}$ = 2$\overline{\mathcal{X}}_{n}$
+
+```{r}
+est1 <- function(...){
+  estimacion <- mean(...)*2
+  return(estimacion)
+}
+```
+
+#### Estimador 2.  $\widetilde{\theta}$ = max{$\mathcal{X}$,...,$\mathcal{X}_{n}$}
+
+```{r}
+est2 <- function(datos){
+  maximo <- 0
+  for(i in datos){
+    maximo <- max(maximo, i)
+  }
+  return(maximo)
+}
+```
+
+```{r}
+muestra1 <- c(1.17, 1.75, 0.28, 2.56, 2.36, 0.36, 1.82, 0.24, 1.17, 1.86)
+muestra1
+
+```
+
+#### Calculo del estimador 1 y 2 con la muestra 1
+
+```{r}
+est1_muestra1 <- est1(muestra1)
+est1_muestra1
+
+est2_muestra2 <- est2(muestra1)
+est2_muestra2
+```
+
+```{r}
+muestra2 <- c(0.66, 0.07, 0.62, 0.65, 1.33, 0.40, 1.17, 1.11, 2.01, 2.98)
+muestra2
+```
+
+#### Calculo del estimador 1 y 2 con la muestra 2
+
+```{r}
+est1_muestra2 <- est1(muestra2)
+est1_muestra2
+
+est2_muestra2 <- est2(muestra2)
+est2_muestra2
+```
+
+```{r}
+Nrep <- 10000
+estimaciones_funcion <- function(n, x){
+  estimaciones <- rep(NA, Nrep)
+  for(i in 1:Nrep){
+    datos_n <- runif(n, min = 0, max = 10)
+    if(x == 1){
+      estimaciones[i] <- est1(datos_n)
+    }
+    else{
+      estimaciones[i] <- est2(datos_n)
+    }
+  }
+  return(estimaciones)
+}
+```
+
+Funcion para hacer n simulaciones de un tipo x de estimador
+
+```{r}
+estimacion1_5 <- estimaciones_funcion(5, 1)
+
+estimacion1_30 <- estimaciones_funcion(30, 1)
+
+estimacion1_100 <- estimaciones_funcion(100, 1)
+```
+
+Estimaciones de $\widehat{\theta}$ (estimador 1) con n = 5, n = 30 y n = 100
+
+#### Histogramas
+```{r}
+
+hist(estimacion1_5, probability = T, xlim = c(0,20), ylim  = c(0, 0.8))
+
+hist(estimacion1_30, probability = T, xlim = c(0,20), ylim = c(0, 0.8))
+
+hist(estimacion1_100, probability = T, xlim = c(0, 20), ylim = c(0, 0.8))
+```
+
+#### Boxplot
+```{r}
+
+boxplot(estimacion1_5, horizontal = T)
+
+boxplot(estimacion1_30, horizontal = T)
+
+boxplot(estimacion1_100, horizontal = T)
+```
+
+a) Se puede decir que ya a partir de un n bajo, $\widehat{\theta}$ tiene distribucuion aproximadamente normal, y por lo tanto con un n mas grandes se va a parecer aun mas. Esto se debe a que $\widehat{\theta}$ = 2$\overline{\mathcal{X}}_{n}$ y $\overline{\mathcal{X}}_{n} \approx \mathcal{N}$; y por propiedades de las normal, multiplicar por una constante a una normal, sigue siendo normal.
+
+b) La varianza de $\widehat{\theta}$ disminuye cuando n aumenta, ya que Var($\widehat{\theta}$) = Var(2$\overline{\mathcal{X}}_{n}$) = $\frac{4Var(\mathcal{X})}{n}$ = $\frac{1}{3n}$ y eso es decreciente en n
+
+c) $\widehat{\theta}$ se concentra alrededor de  E($\widehat{\theta}$) = E(2$\overline{\mathcal{X}}_{n}$) = 2E($\mathcal{X}$) = 2*5 = 10 y eso lo justifica LGN (cuando n tiende a infinito, la varible aleatoria se acerca cada vez mas a su esperanza).
+
+d) El estimaria E($\widehat{\theta}$) a partir de su media, es decir $\frac{1}{n}$ $\sum_{i = 1}^n \widehat{\theta}_{i}$
+
+Las estimaciones de las medias son:
+
+```{r}
+mean(estimacion1_5)
+mean(estimacion1_30)
+mean(estimacion1_100)
+```
+Se puede ver como las estimaciones de E($\widehat{\theta}$) para distintos, son buenas dado que se acercan al valor teorico de E($\widehat{\theta}$) (la cual es igual para cualquier n).
+
+### Ejercicio 3
+
+```{r}
+estimacion2_5 <- estimaciones_funcion(5, 2)
+
+estimacion2_30 <- estimaciones_funcion(30, 2)
+
+estimacion2_100 <- estimaciones_funcion(100, 2)
+```
+
+Estimaciones de $\widetilde{\theta}$ (estimador 2) con n = 5, n = 30 y n = 100
+
+#### Histogramas
+```{r}
+
+hist(estimacion2_5, probability = T, xlim = c(0,20), ylim  = c(0, 8))
+
+hist(estimacion2_30, probability = T, xlim = c(0,20), ylim = c(0, 8))
+
+hist(estimacion2_100, probability = T, xlim = c(0, 20), ylim = c(0, 8))
+```
+
+#### Boxplot
+```{r}
+
+boxplot(estimacion2_5, horizontal = T)
+
+boxplot(estimacion2_30, horizontal = T)
+
+boxplot(estimacion2_100, horizontal = T)
+```
+
+a) En este caso la distribucion de $\widetilde{\theta}$ no se parece a una normal y eso se debe a que una estimacion de $\widetilde{\theta}$ nunca va a tomar un valor mayor al del parametro que se busca estimar
+
+b) Cuando n aumenta Var($\widetilde{\theta}$) parece achicarse y eso es logico, ya que cuando se toma un n mas grande, es mas probable que haya un $\widetilde{\theta}_{i}$ muy cercano al valor real del parametro y como $\widetilde{\theta}$ toma el valor maximo, siempre se va a quedar con el mas cercano al parametro
+
+c) En los histogramas cuando n aumenta la distribucion de $\widetilde{\theta}$ se va acercando alrededor de 10, lo cual es el valor maximo de $\mathcal{X}$
+
+d) El estimaria E($\widetilde{\theta}$) a partir de su media, es decir $\frac{1}{n}$ $\sum_{i = 1}^n \widetilde{\theta}_{i}$

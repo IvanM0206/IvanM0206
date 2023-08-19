@@ -165,3 +165,35 @@ b) Cuando n aumenta Var($\widetilde{\theta}$) parece achicarse y eso es logico, 
 c) En los histogramas cuando n aumenta la distribucion de $\widetilde{\theta}$ se va acercando alrededor de 10, lo cual es el valor maximo de $\mathcal{X}$
 
 d) El estimaria E($\widetilde{\theta}$) a partir de su media, es decir $\frac{1}{n}$ $\sum_{i = 1}^n \widetilde{\theta}_{i}$
+
+
+### Ejercicio 4
+
+##### Los seis histogramas:
+\pagebreak
+```{r, fig.dim = c(15,15), fig.align = 'center'}
+par(mfrow = c(2, 3))
+
+hist(estimacion1_5, probability = T, xlim = c(0,20), ylim  = c(0, 8))
+
+hist(estimacion1_30, probability = T, xlim = c(0,20), ylim = c(0, 8))
+
+hist(estimacion1_100, probability = T, xlim = c(0, 20), ylim = c(0, 8))
+
+
+hist(estimacion2_5, probability = T, xlim = c(0,20), ylim  = c(0, 8))
+
+hist(estimacion2_30, probability = T, xlim = c(0,20), ylim = c(0, 8))
+
+hist(estimacion2_100, probability = T, xlim = c(0, 20), ylim = c(0, 8))
+```
+
+>Para cada eligiria:
+
+>* n = 5: $\widetilde{\theta}$
+
+>* n = 30: $\widetilde{\theta}$
+
+>* n = 100: $\widetilde{\theta}$
+
+#### En todos los casos, la probabilidad de que el estimador $\widetilde{\theta}$ este cerca del valor real del parametro es mayor que la probabilidad de que $\widehat{\theta}$ lo este
